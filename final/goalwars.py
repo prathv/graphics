@@ -14,10 +14,10 @@ y = -1.5
 z = 2.0
 ballx = 0
 bally = -1.7
-xspeed = 0.08
-yspeed = 0.02
+xspeed = 0.008
+yspeed = 0.007
 quadric = gluNewQuadric()
-gravity = 0.01
+gravity = 0.0009
 animate = 1
 up = 1
 down = 0
@@ -226,13 +226,13 @@ class Cyclone():
 	#	glPopMatrix()
 	
 		point = self.checkcol(radius,ballx,bally,cube1x,cube1y,sizecube)
-		#point2 = self.checkcol(radius,ballx,bally,cube2x,cube2y,sizecube)
+		point2 = self.checkcol(radius,ballx,bally,cube2x,cube2y,sizecube)
 #		print "Animate value" , animate
 #		print "DOwn value and UP value",down,up	
 		if animate == 0:
 				
 			self.cubecol(cube1x,cube1y,point)
-		#	self.cubecol(cube2x,cube2y,point2)
+			self.cubecol(cube2x,cube2y,point2)
 			#print yspeed,up,down
 #		print bally	
 		
@@ -690,8 +690,8 @@ class Cyclone():
 		if key == "x":
 			ballx = 0
 			bally = -1.5
-			yspeed = 0.01
-			xspeed = 0.05
+			yspeed = 0.008
+			xspeed = 0.005
 			left = 1
 			right = 1
 	
@@ -783,9 +783,9 @@ class Cyclone():
 									bally += forcey 
 							
 							else:
-									ballx -= forcex 
+									ballx -= 0.015+ forcex 
 									bally += forcey
-									
+									xspeed = 0.015 + forcex		
 		
 				#			print "final position",ballx,bally,forcex,forcey
 							up = 0
@@ -804,8 +804,9 @@ class Cyclone():
 									ballx += forcex
 									bally += forcey 
 								else:
-									ballx += forcex 
+									ballx += 0.015 + forcex 
 									bally += forcey
+									xspeed = 0.015 + forcex
 							up = 0
 							down = 1
 							right = 1
