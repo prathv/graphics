@@ -8,7 +8,7 @@ from math import *
 from PIL.Image import *
 from collections import *
 from time import *
-name = "Pattys Goal Wars"
+name = "Pattys Heli"
 x = 0.24
 y = -1.6
 z = 2.0
@@ -43,7 +43,7 @@ cube2 = glGenLists(1)
 keys =  defaultdict((bool))
 lightcol = 0
 goal = 0
-class Goal():
+class Cyclone():
 
 	def __init__(self):
 		pass	
@@ -58,8 +58,8 @@ class Goal():
 		glutInitWindowPosition((glutGet(GLUT_SCREEN_WIDTH)-size[0])/2,(glutGet(GLUT_SCREEN_HEIGHT)-size[1])/2)
 		glutInitWindowSize(size[0],size[1])
 		glutCreateWindow(name)
-		glEnable(GL_LIGHTING)
-		glEnable(GL_NORMALIZE)
+#		glEnable(GL_LIGHTING)
+#		glEnable(GL_NORMALIZE)
                 glEnable(GL_DEPTH_TEST)
                 glEnable(GL_BLEND)
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
@@ -84,6 +84,19 @@ class Goal():
 		glEndList()
 		
 		glutKeyboardUpFunc(self.keypressed) 
+#		glNewList(cube1,GL_COMPILE) 	
+
+#	    	self.cubecreate(sizecube/2,1)
+  	
+#		glEndList()
+		
+#		glNewList(cube2,GL_COMPILE) 	
+
+#	    	self.cubecreate(sizecube/2,2)
+  	
+#		glEndList()
+	
+
 	
 	def create_point_light(self, ln = 0,location=(0,0,0),color = (1.0,0.0,0.)):
 		x,y,z = location
@@ -92,13 +105,13 @@ class Goal():
 		lightPosition = [x,y,z,1]
 		lightColor = [r,g,b,1.0]
 		glLightfv(GL_LIGHT0+ln,GL_POSITION,lightPosition)
-		glLightfv(GL_LIGHT0+ln,GL_AMBIENT, lightColor)
+		glLightfv(GL_LIGHT0+ln,GL_DIFFUSE, lightColor)
 	
-		glLightfv(GL_LIGHT0+ln,GL_CONSTANT_ATTENUATION, 0.1)
+		glLightfv(GL_LIGHT0+ln,GL_CONSTANT_ATTENUATION, 0.001)
 			
-		glLightfv(GL_LIGHT0+ln,GL_LINEAR_ATTENUATION, 0.05)
+		glLightfv(GL_LIGHT0+ln,GL_LINEAR_ATTENUATION, 0.001)
 
-		glLightfv(GL_LIGHT0+ln,GL_QUADRATIC_ATTENUATION, 0.)	
+		glLightfv(GL_LIGHT0+ln,GL_QUADRATIC_ATTENUATION, 0.0001)	
 
 	def create_light(self,ln=0,location=(0,10,0),color=(0.5,0.2,0.0),spot=False):
 
@@ -109,7 +122,7 @@ class Goal():
 			glLightfv(GL_LIGHT0+ln, GL_SPOT_EXPONENT, 1)
 			glLightfv(GL_LIGHT0+ln, GL_SPOT_CUTOFF, 180.0)
 				 
-#		glEnable(GL_LIGHT0+ln)
+		glEnable(GL_LIGHT0+ln)
 	
 	    	
 
@@ -125,6 +138,7 @@ class Goal():
 				y = random.uniform(0,1)
 				z = random.uniform(0,1)
 				lightcolor = (x,y,z)
+				print lightcolor
 				lightcol += 1
 			else:
 				goal = 0
@@ -149,7 +163,10 @@ class Goal():
                 glRotatef( self.Yrot, 0., 1., 0.)
                 glRotatef( self.Xrot, 1., 0., 0.)
 		glRotatef( self.Zrot, 0., 0., 1.)
+#		if self.Scale < 0.1:
+#			self.Scale = 0.1
 
+#		glScalef(self.Scale,self.Scale,self.Scale)
 
 	def LoadTextures(self,image,mod = False):
     	#global texture
@@ -209,19 +226,21 @@ class Goal():
 		glClearColor(0.0, 0.0, 0.0, 0.0 )
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 	
+		glEnable(GL_LIGHT0)		
+	
 	#	self.Xrot += 0.2	
 		glCallList(bound)
 	
 		glPushMatrix()	
 		glEnable(GL_LIGHT0)
-	#	glDisable(Gl_LIGHT)
 		glPopMatrix()
 
 		glPushMatrix()
+		#glColor3f(1.0,0,0)
 		
 		glEnable(GL_TEXTURE_2D)
 
-		#glDisable(GL_LIGHT0)	
+		
 		self.LoadTextures("soccer.jpg")
 		glTranslate(ballx,bally,0.)
 		if left == 1:
@@ -238,8 +257,10 @@ class Goal():
 		
 			
 		glPushMatrix()
+	#	glTranslate(cube1x,cube1y,0)
 		glTranslate(cube1x,cube1y,0)
 		self.rhead += 0.7
+		#glutSolidCube(sizecube)
 		glRotate(self.rhead,0,1,0)
 		#glCallList(cube1)
 		self.cubecreate(sizecube/2,1)
@@ -258,12 +279,27 @@ class Goal():
 
 
 
+			#	glPushMatrix()
+	#	glColor3f(1,0,0)
+	#	glTranslate(cube1x,cube1y+(sizecube/2),0)
+	#	glPopMatrix()
+
+	#	glPushMatrix()
+	#	glColor3f(1,0,0)
+	#	glTranslate(ballx,bally-radius,0)
+	#	gluSphere(quadric,0.002,32,32)
+	#	glPopMatrix()
+		print "working",animate	
 		point = self.checkcol(radius,ballx,bally,cube1x,cube1y,sizecube)
 		point2 = self.checkcol(radius,ballx,bally,cube2x,cube2y,sizecube)
-		if animate == 1:
+#		print "Animate value" , animate
+#		print "DOwn value and UP value",down,up	
+		if animate == 0:
 				
 			self.cubecol(cube1x,cube1y,point)
 			self.cubecol(cube2x,cube2y,point2)
+			#print yspeed,up,down
+#		print bally	
 		
 		self.goaldet()	
 
@@ -276,6 +312,7 @@ class Goal():
 		glEnable(GL_TEXTURE_2D)
 		self.LoadTextures("sky.jpg")	
 		
+      		#glColor3f(1.0, 0.0, 0.0)
 		glBegin(GL_QUADS)
 		
 				#top face
@@ -448,7 +485,7 @@ class Goal():
 		glPushMatrix()		
 		numpart = 0.2/5
 		glEnable(GL_TEXTURE_2D)
-		self.LoadTextures("grass.jpg",mod = True)	
+		self.LoadTextures("grass.jpg",mod = False)	
 		glRotate(90,0,1,0)
 		glBegin(GL_QUADS) 
 		
@@ -616,7 +653,20 @@ class Goal():
 		glRotate(90,0,1,0)
 		
 		glBegin(GL_TRIANGLES)
-	#	glColor3f(0.3, 0.0, 0.0)
+	#	glTexCoord2f(0.0,0,0);
+  #    		glVertex3f( 0.3, -0.3, -0.3)
+		#(0,0)
+		#glTexCoord2f(0.0,0.3);
+ #  	        glVertex3f(-0.3, -0.3, -0.3)
+      		#(0.3)
+#		#glTexCoord2f(1.0,0.3);
+#		glVertex3f(-0.3 , 0.3, -0.3)
+      		#(0.3.3)
+		#glTexCoord2f(1.0,0.0);
+#		glVertex3f( 0.3,  0.3, -0.3)
+		
+		#left face
+      		#glColor3f(0.3, 0.0, 0.0)
 		#(0.3)
 		glTexCoord2f(0.9,0.9);
 	
@@ -668,16 +718,27 @@ class Goal():
 				rotatey = 1
 			else:
 				rotatey = 0	
+		if key == 'h':	
+			if rotatez == 0:
+				rotatez = 1
+			else:
+				rotatez = 0
+		if key == 'w':	
+			z -= 0.1
 			
 		if key == 'a':
 			keys['a'] = True
+		#	print "a is pressed"	
 			cube1x -= 0.01
 			if cube1x < -1.7:
 					cube1x = -1.7
 	
 		else:
 			keys['a'] = False
+		#	print "a is released"
 		
+		if key == 's':	
+			z += 0.1
 		if key == 'd':	
 			cube1x += 0.01
 			if cube1x > 1.7:
@@ -685,6 +746,7 @@ class Goal():
 						
 			
 		if key == 'j':	
+		#	print "j is pressed"
 			keys['j'] = True
 			if keys['j'] == True:
 				cube2x -= 0.01
@@ -697,8 +759,8 @@ class Goal():
 				cube2x = 1.7
 					
 		if key == "x":
-			ballx = 0.24
-			bally = -1.5
+			ballx = 0
+			bally = -1.7
 			yspeed = 0.008
 			xspeed = 0.005
 			left = 1
@@ -730,6 +792,7 @@ class Goal():
 			if down == 0:
 					
 				distance = sqrt(pow(float(ballx - point[0]),2) +pow(float(bally - point[1]),2))
+				print "Down position",ballx,bally,yspeed,xspeed
 				yspeed += gravity
 				bally += -yspeed
 				if left == 1:
@@ -756,13 +819,20 @@ class Goal():
 					
 	
 				
+				print "cube coordinates are",cube1x,cube1y
+				print "ball coordinates",ballx,bally
+				print "left right coordinates for",cube1x,point[2],point[3]
+
+				print "distance between ball and point is ",distance,"radius is",radius
 				
 				kx = ((point[0] - cube1x)/sqrt(pow(point[0]-cube1x,2)+pow(point[1]-cube1y,2)))
 				ky = ((point[1] - cube1y)/sqrt(pow(point[0]-cube1x,2)+pow(point[1]-cube1y,2)))
+				print(kx,ky)
 				kx = kx * (radius +  sqrt(pow(float(point[0] - cube1x),2) +pow(float(point[1] - cube1y),2)))
 				ky = ky * (radius + sqrt(pow(float(point[0] - cube1x),2) +pow(float(point[1] - cube1y),2)))
 				
 				if  distance <= radius :
+					print "collision",point[0],point[1]
 					
 					kx = ((point[0] - cube1x)/sqrt(pow(point[0]-cube1x,2)+pow(point[1]-cube1y,2)))
 					ky = ((point[1] - cube1y)/sqrt(pow(point[0]-cube1x,2)+pow(point[1]-cube1y,2)))
@@ -801,6 +871,7 @@ class Goal():
 							bally = ky + cube1y
 								
 							if point[3] >= 0.1:
+								print "right x collision, entered"
 								if point[2] < 0.025:		
 									ballx += forcex
 									#bally -= 0.001 
@@ -813,17 +884,44 @@ class Goal():
 							right = 1
 							left = 0
 								
-								
+					#	else:
+					#		print "left x collision"
+					#		ballx = kx + cube1x
+					#		bally = ky + cube1y
+					#		up = 0 
+					#		down = 1
+									
 		
 			
 			if up == 0:
 				
 				distance = sqrt(pow(float(ballx - point[0]),2) +pow(float(bally - point[1]),2))
+				print "up",ballx,bally
 				if bally >= 2.0:
 					bally = 1.9
 				
 						
+				#	up = 1
+				#	down = 0
+			
+					
+		#		if ballx <= -1.7 :
+		#			ballx = -1.7
+		#			if bally <= -1.56:
+		##				if bally != -1.9:
+		#					print bally
+		#					bally -= 0.01
+		#			else:
+		#				bally += yspeed
+		#				ballx += -xspeed
+						
 				
+#				if ballx >= 1.7 and bally <= -1.5:
+#					ballx = 1.7
+#					if bally != -1.9:
+		#				print bally
+		#				bally -= 0.01
+					
 					
 				bally += yspeed
 								
@@ -835,25 +933,32 @@ class Goal():
 				if right == 1:
 					ballx += xspeed
 				if  distance <= radius :
+					print "collision"
 						
 					kx = ((point[0] - cube1x)/sqrt(pow(point[0]-cube1x,2)+pow(point[1]-cube1y,2)))
 					ky = ((point[1] - cube1y)/sqrt(pow(point[0]-cube1x,2)+pow(point[1]-cube1y,2)))
 					kx = kx * (radius +  sqrt(pow(float(point[0] - cube1x),2) +pow(float(point[1] - cube1y),2)))
 					ky = ky * (radius + sqrt(pow(float(point[0] - cube1x),2) +pow(float(point[1] - cube1y),2)))
 					if abs(point[0]) < 0.1 :
+						print "no x collison"
 						ballx = kx + cube1x	
 						bally = ky + cube1y
+						print "kx and ky are",(kx,ky)
 							
 						#up = 1
 						#down = 0 	
 					else: 	
 						if point[0] < 0:
+							print "right x collision"
 							ballx = kx + cube1x
 							bally = ky + cube1y
 						else:
+							print "left x collision"
 							ballx = kx + cube1x
 							bally = ky + cube1y
 									
+				else:
+					print "No collision sucka"
 				
 				if yspeed < 0:
 						up = 1
@@ -932,6 +1037,18 @@ class Goal():
 			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, ord(text[i]))
 		glPopMatrix()
 
+		#def checkkey(self):
+	#	global keys,cube1x,cube1y
+	#	for x in keys:
+	#		if keys['a'] == True:
+	#			cube1x -= 0.01
+		
+		
+				
+									
+rotatey = 1
+rotatez = 1      	
+cubemv = 0
 def Createmenu():
 		menu = glutCreateMenu(processMenuEvents)
 		glutAddMenuEntry("Far View",1)
@@ -951,11 +1068,6 @@ def processMenuEvents(option):
 			pass	
 	
 		return 1 
-	
-									
-rotatey = 1
-rotatez = 1      	
-cubemv = 0
-	
-c = Goal()
+		
+c = Cyclone()
 c.main()

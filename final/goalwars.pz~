@@ -92,13 +92,13 @@ class Goal():
 		lightPosition = [x,y,z,1]
 		lightColor = [r,g,b,1.0]
 		glLightfv(GL_LIGHT0+ln,GL_POSITION,lightPosition)
-		glLightfv(GL_LIGHT0+ln,GL_AMBIENT, lightColor)
+		glLightfv(GL_LIGHT0+ln,GL_DIFFUSE, lightColor)
 	
-		glLightfv(GL_LIGHT0+ln,GL_CONSTANT_ATTENUATION, 0.1)
+		glLightfv(GL_LIGHT0+ln,GL_CONSTANT_ATTENUATION, 0.01)
 			
-		glLightfv(GL_LIGHT0+ln,GL_LINEAR_ATTENUATION, 0.05)
+		glLightfv(GL_LIGHT0+ln,GL_LINEAR_ATTENUATION, 0.01)
 
-		glLightfv(GL_LIGHT0+ln,GL_QUADRATIC_ATTENUATION, 0.)	
+		glLightfv(GL_LIGHT0+ln,GL_QUADRATIC_ATTENUATION, 1.0)	
 
 	def create_light(self,ln=0,location=(0,10,0),color=(0.5,0.2,0.0),spot=False):
 
@@ -131,7 +131,7 @@ class Goal():
 				lightcol = 0
 		glPushMatrix()
 		
-		self.create_light(0,location = (0,-1.5,0),color = lightcolor,spot=True)
+		self.create_light(0,location = (0,-1.5,0),color = lightcolor,spot=False)
 		glPopMatrix()
 		
 			
@@ -260,7 +260,7 @@ class Goal():
 
 		point = self.checkcol(radius,ballx,bally,cube1x,cube1y,sizecube)
 		point2 = self.checkcol(radius,ballx,bally,cube2x,cube2y,sizecube)
-		if animate == 1:
+		if animate == 0:
 				
 			self.cubecol(cube1x,cube1y,point)
 			self.cubecol(cube2x,cube2y,point2)
